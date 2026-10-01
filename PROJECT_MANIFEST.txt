@@ -1,0 +1,47 @@
+FlyHi v3 source manifest
+
+Core Rasa:
+- config.yml
+- domain.yml
+- credentials.yml
+- endpoints.yml
+- endpoints.docker.yml
+- data/nlu.yml
+- data/rules.yml
+- data/stories.yml
+
+Actions:
+- actions/actions.py
+- actions/services.py
+- actions/validators.py
+- actions/ranking.py
+- actions/demo_data.py
+
+Tests:
+- tests/nlu_test.yml
+- tests/test_stories.yml
+- tests/test_validators.py
+- tests/test_ranking.py
+- tests/test_services.py
+
+Frontend:
+- web/index.html
+
+Deployment/reproduction:
+- Dockerfile.rasa
+- Dockerfile.actions
+- docker-compose.yml
+- requirements-rasa.txt
+- requirements-actions.txt
+- requirements-dev.txt
+- .env.example
+- .gitignore
+- README.md
+
+Documentation:
+- docs/ARCHITECTURE.md
+- docs/API_NOTES.md
+- docs/TEST_PLAN.md
+- docs/REPORT_EVIDENCE_MAP.md
+- PROJECT_STATUS.md
+- CHANGELOG.md

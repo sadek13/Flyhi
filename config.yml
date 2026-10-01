@@ -1,0 +1,31 @@
+recipe: default.v1
+assistant_id: flyhi-v2
+language: en
+
+pipeline:
+  - name: WhitespaceTokenizer
+  - name: RegexFeaturizer
+  - name: LexicalSyntacticFeaturizer
+  - name: CountVectorsFeaturizer
+  - name: CountVectorsFeaturizer
+    analyzer: char_wb
+    min_ngram: 3
+    max_ngram: 5
+  - name: DIETClassifier
+    epochs: 100
+    constrain_similarities: true
+  - name: FallbackClassifier
+    threshold: 0.70
+    ambiguity_threshold: 0.10
+
+policies:
+  - name: MemoizationPolicy
+    max_history: 5
+  - name: RulePolicy
+    core_fallback_threshold: 0.30
+    core_fallback_action_name: action_fallback_handler
+    enable_fallback_prediction: true
+  - name: TEDPolicy
+    max_history: 5
+    epochs: 100
+    constrain_similarities: true

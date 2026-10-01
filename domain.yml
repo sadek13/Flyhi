@@ -1,0 +1,209 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - thanks
+  - help
+  - plan_trip
+  - compare_options
+  - show_accommodation
+  - human_handover
+  - cancel
+  - explain_recommendation
+  - explain_eco_score
+  - out_of_scope
+  - change_preference
+  - nlu_fallback
+  - show_activities
+  - show_offsets
+slots:
+  origin:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        not_intent:
+          - cancel
+          - human_handover
+          - help
+        conditions:
+          - active_loop: trip_planning_form
+            requested_slot: origin
+
+  destination:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        not_intent:
+          - cancel
+          - human_handover
+          - help
+        conditions:
+          - active_loop: trip_planning_form
+            requested_slot: destination
+
+  start_date:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        not_intent:
+          - cancel
+          - human_handover
+          - help
+        conditions:
+          - active_loop: trip_planning_form
+            requested_slot: start_date
+
+  end_date:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        not_intent:
+          - cancel
+          - human_handover
+          - help
+        conditions:
+          - active_loop: trip_planning_form
+            requested_slot: end_date
+
+  budget:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        not_intent:
+          - cancel
+          - human_handover
+          - help
+        conditions:
+          - active_loop: trip_planning_form
+            requested_slot: budget
+
+  travel_preference:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        not_intent:
+          - cancel
+          - human_handover
+          - help
+        conditions:
+          - active_loop: trip_planning_form
+            requested_slot: travel_preference
+
+  origin_code:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  destination_code:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  recommendation_json:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  fallback_count:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  handover_requested:
+    type: bool
+    initial_value: false
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+forms:
+  trip_planning_form:
+    required_slots:
+      - origin
+      - destination
+      - start_date
+      - end_date
+      - budget
+      - travel_preference
+
+responses:
+  utter_greet:
+    - text: "Hi, I’m FlyHi. I can compare lower-carbon travel options and explain the trade-offs."
+
+  utter_goodbye:
+    - text: "Goodbye. Safe travels."
+
+  utter_you_are_welcome:
+    - text: "You’re welcome."
+
+  utter_help:
+    - text: "You can say: plan a trip, compare options, show hotels, show activities, show carbon offsets, show cheapest instead, why this option, what is Eco Score, cancel, or human advisor."
+
+  utter_ask_trip_planning_form_origin:
+    - text: "Where are you travelling from?"
+
+  utter_ask_trip_planning_form_destination:
+    - text: "Where would you like to travel?"
+
+  utter_ask_trip_planning_form_start_date:
+    - text: "What date would you like to start your trip?"
+
+  utter_ask_trip_planning_form_end_date:
+    - text: "What date will you return?"
+
+  utter_ask_trip_planning_form_budget:
+    - text: "What is your budget for the trip in US dollars?"
+
+  utter_ask_trip_planning_form_travel_preference:
+    - text: "What matters most to you: the greenest option, the cheapest option, or a balance of both?"
+      buttons:
+        - title: "Greenest"
+          payload: "greenest"
+        - title: "Cheapest"
+          payload: "cheapest"
+        - title: "Balanced"
+          payload: "balanced"
+
+  utter_trip_ready:
+    - text: "Great. I have the information I need. I’ll now check the available travel data and environmental impact."
+
+  utter_api_unavailable:
+    - text: "I couldn't complete the external travel-data request right now."
+
+  utter_no_recommendation:
+    - text: "I don't have a current recommendation yet. Please plan a trip first."
+
+  utter_cancelled:
+    - text: "Okay. I cancelled the current trip plan and cleared its saved details."
+
+  utter_eco_score:
+    - text: "FlyHi's Eco Score is a relative 0–100 comparison inside the current result set. The lowest estimated CO2e option gets the highest score. It is not an external certification or an absolute sustainability rating."
+
+actions:
+  - validate_trip_planning_form
+  - action_plan_trip
+  - action_compare_options
+  - action_change_preference
+  - action_explain_recommendation
+  - action_show_accommodation
+  - action_fallback_handler
+  - action_human_handover
+  - action_cancel_trip
+  - action_show_activities
+  - action_show_offsets
+  
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

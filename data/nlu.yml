@@ -1,0 +1,239 @@
+version: "3.1"
+
+nlu:
+  - intent: greet
+    examples: |
+      - hi
+      - hello
+      - hey
+      - good morning
+      - good evening
+      - hi flyhi
+      - hello there
+      - hey bot
+      - morning
+      - hi can you help me
+
+  - intent: goodbye
+    examples: |
+      - bye
+      - goodbye
+      - see you
+      - see you later
+      - that's all bye
+      - talk later
+      - have a good day
+      - exit
+      - stop chatting
+      - bye flyhi
+
+  - intent: thanks
+    examples: |
+      - thanks
+      - thank you
+      - great thanks
+      - perfect thank you
+      - cheers
+      - appreciate it
+      - thank you flyhi
+      - nice thanks
+      - okay thanks
+      - got it thanks
+
+  - intent: help
+    examples: |
+      - help
+      - what can you do
+      - how does this work
+      - what can I ask
+      - show me the commands
+      - I need help
+      - what do you support
+      - explain what you can do
+      - how can you help me
+      - what are my options
+      - what can flyhi do
+      - tell me how to use this
+
+  - intent: plan_trip
+    examples: |
+      - plan a trip
+      - travel
+      - I want to travel
+      - help me plan a journey
+      - plan my holiday
+      - I need a travel plan
+      - start trip planner
+      - find me a sustainable trip
+      - I want an eco friendly trip
+      - compare a trip for me
+      - help me travel somewhere
+      - let's plan a trip
+      - make a travel plan
+      - find transport for my journey
+      - I want to go on a trip
+
+  - intent: compare_options
+    examples: |
+      - compare options
+      - compare them
+      - show the alternatives
+      - show all options
+      - what are the other options
+      - compare the travel choices
+      - give me the top options
+      - show me the comparison
+      - what else can I take
+      - list the transport options
+      - compare transport
+      - show the ranked choices
+
+  - intent: show_accommodation
+    examples: |
+      - show hotels
+      - show accommodation
+      - where can I stay
+      - recommend a hotel
+      - hotel options
+      - accommodation options
+      - find somewhere to stay
+      - show me eco hotels
+      - where should I sleep
+      - suggest accommodation
+      - show sustainable stays
+      - show places to stay
+
+  - intent: human_handover
+    examples: |
+      - human advisor
+      - I want a person
+      - speak to a human
+      - connect me to an advisor
+      - can I talk to someone
+      - give me human support
+      - transfer me to a person
+      - I need a real person
+      - hand me over
+      - talk to an agent
+      - contact a travel advisor
+      - human help please
+
+  - intent: cancel
+    examples: |
+      - cancel
+      - stop
+      - cancel the trip
+      - forget this trip
+      - stop planning
+      - never mind
+      - abort
+      - clear the trip
+      - reset the trip
+      - cancel this plan
+      - I don't want to continue
+      - end the planner
+
+  - intent: show_activities
+    examples: |
+      - show me activities
+      - show me some activities
+      - what activities can I do
+      - what can I do there
+      - show me events
+      - what events are available
+      - find events for my trip
+      - show cultural events
+      - find cultural activities
+      - what is happening there
+      - are there any events during my trip
+      - show me things to do
+      - what can I visit
+      - find activities at my destination
+      - show events at my destination
+
+  - intent: explain_recommendation
+    examples: |
+      - why this option
+      - why did you choose that
+      - explain the recommendation
+      - why is this first
+      - why did rail win
+      - why did you recommend it
+      - explain why this is best
+      - how did you choose this
+      - what made this option first
+      - explain the result
+      - why that transport
+      - why is it ranked first
+
+  - intent: explain_eco_score
+    examples: |
+      - what is eco score
+      - explain eco score
+      - how is the eco score calculated
+      - what does 100 eco score mean
+      - is eco score a certification
+      - how do you calculate sustainability
+      - explain the environmental score
+      - what does the green score mean
+      - how does your carbon score work
+      - tell me about eco score
+      - what is the sustainability rating
+      - why is the eco score relative
+      
+  - intent: out_of_scope
+    examples: |
+      - zorbax flying potato
+      - purple elephants dancing
+      - my refrigerator is singing
+      - banana spaceship
+      - tell me about quantum potatoes
+      - I want to buy a washing machine
+      - my cat likes pizza
+      - who won the football match
+      - can you repair my laptop
+      - what is the meaning of life
+      - tell me a random joke
+      - I need help with my homework
+      - dinosaurs are driving cars
+      - blah blah random words
+      - flying potato 928
+      - what is my favorite movie
+      - can you cook pasta
+      - the moon is made of cheese
+      - abc xyz 123
+      - something completely unrelated
+
+  - intent: change_preference
+    examples: |
+      - show cheapest instead
+      - make it cheapest
+      - I want the cheapest option now
+      - switch to greenest
+      - show me the greenest instead
+      - change it to balanced
+      - use balanced instead
+      - I want a balance now
+      - make it green
+      - prioritize price instead
+      - prioritize carbon instead
+      - change my preference to cheapest
+      - change my preference to greenest
+      - change my preference to balanced
+      - show the budget option instead
+
+
+  - intent: show_offsets
+    examples: |
+      - show carbon offsets
+      - show me offset programs
+      - how can I offset this trip
+      - carbon offset options
+      - can I offset the emissions
+      - suggest an offset program
+      - what about carbon offsets
+      - help me offset my travel emissions
+      - where can I offset this trip
+      - show verified offset standards
+      - offset my remaining emissions
+      - are there carbon offset programs

@@ -1,0 +1,93 @@
+version: "3.1"
+
+nlu:
+  - intent: plan_trip
+    examples: |
+      - can you build a journey for me
+      - I need to travel somewhere sustainably
+      - start planning my travel
+
+  - intent: compare_options
+    examples: |
+      - can I see the choices side by side
+      - compare the results for me
+      - show me the alternatives again
+
+  - intent: show_accommodation
+    examples: |
+      - where could I stay at the destination
+      - give me places to sleep
+      - any eco accommodation
+
+  - intent: human_handover
+    examples: |
+      - let me speak with a real advisor
+      - I need human support now
+      - transfer this to a person
+
+  - intent: explain_recommendation
+    examples: |
+      - why is that the recommendation
+      - tell me why this came first
+      - explain your choice
+
+  - intent: explain_eco_score
+    examples: |
+      - is your environmental score absolute
+      - tell me how the carbon rating works
+      - what does the eco number represent
+
+  - intent: change_preference
+    examples: |
+      - switch the result to the lowest price
+      - now prioritize sustainability
+      - can you balance cost and emissions instead
+
+  - intent: cancel
+    examples: |
+      - stop this journey setup
+      - clear everything
+      - cancel what we are doing
+
+  - intent: help
+    examples: |
+      - tell me what commands are available
+      - I don't know what to ask
+      - show me how to use FlyHi
+      
+  - intent: show_activities
+    examples: |
+      - what events can I attend there
+      - find some activities at my destination
+      - are there cultural events during my visit
+
+  - intent: greet
+    examples: |
+      - hey FlyHi
+      - good afternoon
+      - hello there
+
+  - intent: goodbye
+    examples: |
+      - see you later
+      - I am done for now
+      - talk to you another time
+
+  - intent: thanks
+    examples: |
+      - appreciate your help
+      - many thanks
+      - that was helpful thank you
+
+  - intent: out_of_scope
+    examples: |
+      - explain quantum physics to me
+      - write me a recipe for pizza
+      - who won the football match
+
+
+  - intent: show_offsets
+    examples: |
+      - help me offset my trip emissions
+      - suggest carbon offset programs
+      - can I offset this journey

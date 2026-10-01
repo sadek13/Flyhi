@@ -1,0 +1,82 @@
+version: "3.1"
+
+rules:
+  - rule: Start trip planning form
+    steps:
+      - intent: plan_trip
+      - action: trip_planning_form
+      - active_loop: trip_planning_form
+
+  - rule: Submit trip planning form
+    condition:
+      - active_loop: trip_planning_form
+    steps:
+      - action: trip_planning_form
+      - active_loop: null
+      - action: utter_trip_ready
+      - action: action_plan_trip
+
+  - rule: Cancel trip
+    steps:
+      - intent: cancel
+      - action: action_deactivate_loop
+      - active_loop: null
+      - action: action_cancel_trip
+
+  - rule: Compare travel options
+    steps:
+      - intent: compare_options
+      - action: action_compare_options
+
+  - rule: Change ranking preference
+    steps:
+      - intent: change_preference
+      - action: action_change_preference
+
+  - rule: Explain recommendation
+    steps:
+      - intent: explain_recommendation
+      - action: action_explain_recommendation
+
+  - rule: Explain Eco Score
+    steps:
+      - intent: explain_eco_score
+      - action: utter_eco_score
+
+  - rule: Show accommodation
+    steps:
+      - intent: show_accommodation
+      - action: action_show_accommodation
+
+  - rule: Human handover
+    steps:
+      - intent: human_handover
+      - action: action_deactivate_loop
+      - active_loop: null
+      - action: action_human_handover
+
+  - rule: NLU fallback
+    steps:
+      - intent: nlu_fallback
+      - action: action_fallback_handler
+
+  - rule: Help
+    steps:
+      - intent: help
+      - action: utter_help
+  
+  - rule: Handle out of scope input
+    steps:
+      - intent: out_of_scope
+      - action: action_fallback_handler
+
+  - rule: Show activities
+    steps:
+    - intent: show_activities
+    - action: action_show_activities
+
+
+  - rule: Show carbon offsets
+    steps:
+      - intent: show_offsets
+      - action: action_show_offsets

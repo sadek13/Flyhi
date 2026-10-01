@@ -1,0 +1,18 @@
+version: "3.1"
+
+stories:
+  - story: friendly opening and closing
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: thanks
+      - action: utter_you_are_welcome
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - story: thanks after greeting
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: thanks
+      - action: utter_you_are_welcome

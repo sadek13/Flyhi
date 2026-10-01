@@ -1,0 +1,8 @@
+FROM rasa/rasa:3.6.21-full
+USER root
+WORKDIR /app
+COPY . /app
+RUN mkdir -p /app/models && chown -R 1001:1001 /app
+USER 1001
+RUN rasa train --out /app/models
+CMD ["run", "--enable-api", "--cors", "*", "--port", "5005", "--credentials", "credentials.yml", "--endpoints", "endpoints.docker.yml"]

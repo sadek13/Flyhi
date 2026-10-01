@@ -1,0 +1,68 @@
+version: "3.1"
+
+stories:
+  - story: start trip form
+    steps:
+      - user: |
+          I want to plan a journey
+        intent: plan_trip
+      - action: trip_planning_form
+      - active_loop: trip_planning_form
+
+  - story: compare after planning
+    steps:
+      - user: |
+          compare the options
+        intent: compare_options
+      - action: action_compare_options
+
+  - story: adaptive preference change
+    steps:
+      - user: |
+          show cheapest instead
+        intent: change_preference
+      - action: action_change_preference
+
+  - story: explain current recommendation
+    steps:
+      - user: |
+          why did you choose that
+        intent: explain_recommendation
+      - action: action_explain_recommendation
+
+  - story: fallback after unknown input
+    steps:
+      - user: |
+          zorbax flying potato 928
+        intent: nlu_fallback
+      - action: action_fallback_handler
+
+  - story: handover
+    steps:
+      - user: |
+          I want a human advisor
+        intent: human_handover
+      - action: action_deactivate_loop
+      - active_loop: null
+      - action: action_human_handover
+
+  - story: show accommodation after planning
+    steps:
+      - user: |
+          show me accommodation
+        intent: show_accommodation
+      - action: action_show_accommodation
+
+  - story: show activities after planning
+    steps:
+      - user: |
+          show me activities
+        intent: show_activities
+      - action: action_show_activities
+
+  - story: show carbon offsets after planning
+    steps:
+      - user: |
+          show carbon offsets
+        intent: show_offsets
+      - action: action_show_offsets

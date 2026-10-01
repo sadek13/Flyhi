@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FlyHi — Eco-Travel Advisor</title>
+  <style>
+    :root { font-family: Inter, system-ui, sans-serif; color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f6f5; color: #17211d; }
+    .shell { max-width: 880px; margin: 0 auto; min-height: 100vh; display: grid; grid-template-rows: auto auto 1fr auto; }
+    header { padding: 24px 20px 12px; }
+    header h1 { margin: 0; font-size: 28px; }
+    header p { margin: 6px 0 0; color: #55625c; }
+    #status { margin: 0 20px 10px; padding: 9px 12px; border-radius: 10px; background: #e8f2ec; font-size: 14px; }
+    #status.handover { background: #fff0c9; border: 1px solid #b77800; }
+    #chat { margin: 0 20px 16px; background: white; border: 1px solid #dfe5e1; border-radius: 18px; padding: 18px; overflow-y: auto; min-height: 58vh; box-shadow: 0 8px 28px rgba(20,40,30,.06); }
+    .msg { max-width: 82%; padding: 10px 13px; border-radius: 14px; margin: 8px 0; white-space: pre-wrap; line-height: 1.45; }
+    .bot { background: #edf5f0; margin-right: auto; }
+    .user { background: #1f6f4a; color: white; margin-left: auto; }
+    .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+    .quick-reply { min-height: 38px; padding: 8px 12px; border: 1px solid #1f6f4a; border-radius: 18px; background: white; color: #1f6f4a; font-weight: 700; cursor: pointer; }
+    .cards { display: grid; gap: 10px; margin: 10px 0 14px; }
+    .card { border: 2px solid; border-radius: 14px; padding: 12px; background: white; }
+    .card.low { border-color: #267a46; background: #eef8f1; }
+    .card.medium { border-color: #9a6a00; background: #fff8df; }
+    .card.high { border-color: #a33a35; background: #fff0ef; }
+    .card h3 { margin: 0 0 6px; font-size: 17px; }
+    .card p { margin: 3px 0; }
+    .badge { display: inline-block; padding: 3px 7px; border-radius: 999px; font-size: 12px; font-weight: 800; border: 1px solid currentColor; }
+    .offsets { margin: 10px 0 14px; padding: 12px; border: 1px solid #dfe5e1; border-radius: 12px; }
+    .offsets a { color: #145f3d; }
+    form { display: flex; gap: 10px; padding: 0 20px 24px; }
+    input { flex: 1; min-width: 0; border: 1px solid #9eaaa3; border-radius: 12px; padding: 13px 14px; font-size: 16px; }
+    button[type="submit"] { border: 0; border-radius: 12px; padding: 0 18px; background: #1f6f4a; color: white; font-weight: 700; cursor: pointer; }
+    button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid #235fbd; outline-offset: 2px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 600px) { .msg { max-width: 94%; } header { padding-top: 18px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <h1>FlyHi</h1>
+      <p>Eco-Travel Advisor — compare price, carbon impact and travel trade-offs.</p>
+    </header>
+    <div id="status" role="status" aria-live="polite">Bot ready — no human handover requested.</div>
+    <section id="chat" aria-live="polite" aria-label="FlyHi conversation"></section>
+    <form id="form">
+      <label class="sr-only" for="message">Message FlyHi</label>
+      <input id="message" autocomplete="off" placeholder="Type a message…" />
+      <button type="submit">Send</button>
+    </form>
+  </main>
+<script>
+const endpoint = "http://localhost:5005/webhooks/rest/webhook";
+const sender = `flyhi-web-${crypto.randomUUID ? crypto.randomUUID() : Date.now()}`;
+const chat = document.getElementById("chat");
+const form = document.getElementById("form");
+const input = document.getElementById("message");
+const status = document.getElementById("status");
+
+function scrollChat() { chat.scrollTop = chat.scrollHeight; }
+function addMessage(text, role) {
+  const node = document.createElement("div");
+  node.className = `msg ${role}`;
+  node.textContent = text;
+  chat.appendChild(node);
+  scrollChat();
+}
+function addQuickReplies(items) {
+  if (!items || !items.length) return;
+  const group = document.createElement("div");
+  group.className = "quick-replies";
+  group.setAttribute("role", "group");
+  group.setAttribute("aria-label", "Quick replies");
+  items.forEach(item => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "quick-reply";
+    button.textContent = item.title || item.payload;
+    button.addEventListener("click", () => sendMessage(item.payload || item.title));
+    group.appendChild(button);
+  });
+  chat.appendChild(group);
+  scrollChat();
+}
+function emissionBand(score) {
+  const n = Number(score);
+  if (n >= 67) return ["low", "Low relative emissions"];
+  if (n >= 34) return ["medium", "Moderate relative emissions"];
+  return ["high", "High relative emissions"];
+}
+function addResultCards(cards) {
+  if (!cards || !cards.length) return;
+  const wrap = document.createElement("div");
+  wrap.className = "cards";
+  wrap.setAttribute("aria-label", "Travel comparison results");
+  cards.forEach(card => {
+    const [band, label] = emissionBand(card.eco_score);
+    const node = document.createElement("article");
+    node.className = `card ${band}`;
+    const price = card.price_usd == null ? "Price unavailable" : `$${Number(card.price_usd).toFixed(2)}${card.price_source === "prototype estimate" ? " estimated" : ""}`;
+    const carbon = card.co2e_kg == null ? "Emissions unavailable" : `${Number(card.co2e_kg).toFixed(1)} kg CO2e`;
+    node.innerHTML = `<h3>${card.rank}. ${escapeHtml(card.mode || "Option")}</h3><span class="badge">${label}</span><p>${price}</p><p>${carbon}</p><p>Eco Score ${card.eco_score ?? "—"}/100</p>`;
+    wrap.appendChild(node);
+  });
+  chat.appendChild(wrap);
+  scrollChat();
+}
+function addOffsets(programs) {
+  if (!programs || !programs.length) return;
+  const box = document.createElement("div");
+  box.className = "offsets";
+  const heading = document.createElement("strong");
+  heading.textContent = "External offset standards to research";
+  box.appendChild(heading);
+  const list = document.createElement("ul");
+  programs.forEach(program => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = program.url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = program.name;
+    li.appendChild(a);
+    li.appendChild(document.createTextNode(` — ${program.note || ""}`));
+    list.appendChild(li);
+  });
+  box.appendChild(list); chat.appendChild(box); scrollChat();
+}
+function setHandover(context) {
+  status.className = "handover";
+  status.textContent = "Human handover requested — current trip context has been prepared for an advisor.";
+  status.setAttribute("aria-label", "Human handover active");
+}
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+async function sendMessage(message) {
+  message = String(message || "").trim();
+  if (!message) return;
+  input.value = "";
+  addMessage(message, "user");
+  input.disabled = true;
+  try {
+    const response = await fetch(endpoint, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({sender, message}) });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const messages = await response.json();
+    if (!messages.length) addMessage("No response was returned.", "bot");
+    for (const item of messages) {
+      if (item.text) addMessage(item.text, "bot");
+      if (item.buttons) addQuickReplies(item.buttons);
+      if (item.custom) {
+        if (item.custom.result_cards) addResultCards(item.custom.result_cards);
+        if (item.custom.quick_replies) addQuickReplies(item.custom.quick_replies);
+        if (item.custom.offset_programs) addOffsets(item.custom.offset_programs);
+        if (item.custom.handover) setHandover(item.custom.context || {});
+      }
+    }
+  } catch (error) {
+    addMessage(`Could not reach Rasa: ${error.message}`, "bot");
+  } finally {
+    input.disabled = false; input.focus();
+  }
+}
+form.addEventListener("submit", event => { event.preventDefault(); sendMessage(input.value); });
+addMessage("Hi, I’m FlyHi. I can help plan and compare lower-carbon travel options.", "bot");
+addQuickReplies([
+  {title: "Plan a trip", payload: "plan a trip"},
+  {title: "Help", payload: "help"},
+  {title: "Human advisor", payload: "human advisor"}
+]);
+</script>
+</body>
+</html>
