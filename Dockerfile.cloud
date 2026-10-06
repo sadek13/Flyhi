@@ -1,0 +1,16 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY requirements-rasa.txt requirements-actions.txt ./
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements-rasa.txt -r requirements-actions.txt
+
+COPY . /app
+
+RUN chmod +x /app/start_cloud.sh
+
+EXPOSE 7860
+
+CMD ["/app/start_cloud.sh"]
