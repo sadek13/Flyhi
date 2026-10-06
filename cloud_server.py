@@ -40,5 +40,6 @@ class FlyHiHandler(SimpleHTTPRequestHandler):
 
 os.chdir("/app/web")
 
-server = ThreadingHTTPServer(("0.0.0.0", 7860), FlyHiHandler)
+port = int(os.environ.get("PORT", "7860"))
+server = ThreadingHTTPServer(("0.0.0.0", port), FlyHiHandler)
 server.serve_forever()
